@@ -1,0 +1,180 @@
+REQUIRED_XCODE_VERSION = "11.2.1"
+
+############################## PRE ##############################
+
+before_all do |options|
+  lane = lane_context[SharedValues::LANE_NAME]
+  if lane.include? "ios"
+    ENV['KEYS_PLATFORM'] = "iOS/keys_ios"
+  elsif lane.include? "tvos"
+    ENV['KEYS_PLATFORM'] = "tvOS/keys_tvos"
+  elsif lane.include? "macos"
+    ENV['KEYS_PLATFORM'] = "macOS/keys_macos"
+  end
+
+  load_keys
+end
+
+def load_keys
+  begin
+    import("keys")
+    import(keys_platform = ENV['KEYS_PLATFORM'])
+  rescue => exception
+    UI.error("fastlane/keys or keys_platform file not found.")
+    raise exception
+  end
+end
+
+######################### iOS LANES ##########################
+
+platform :ios do
+
+  desc "Deploy a new adhoc version"
+  lane :deploy_adhoc do |options|
+    deploy_ios(env: "adhoc")
+  end
+
+  desc "Deploy a new beta version"
+  lane :deploy_beta do |options|
+    deploy_ios(env: "beta")
+  end
+
+  desc "Deploy a new release build"
+  lane :deploy_release do |options|
+    deploy_ios(env: "release")
+  end
+
+  private_lane :deploy_ios do |options|
+    # Check if certificates / provisionings are up to date
+    post_slack("[MyApp #{ENV["TARGET"]} - #{complete_version_number}] Updating iOS certificates")
+    run_match(ENV["BUNDLE_ID_WHATCHAPP"])
+    run_match(ENV["BUNDLE_ID_WHATCHEXT"])
+    run_match(ENV["BUNDLE_ID_NOTIFSERV"])
+
+    deploy(env: options[:env])
+  end
+
+end
+
+######################### macOS LANES ##########################
+
+platform :mac do
+
+  desc "Deploy a new adhoc version"
+  lane :deploy_adhoc do |options|
+    deploy(env: "adhoc")
+  end
+
+  desc "Deploy a new beta version"
+  lane :deploy_beta do |options|
+    deploy(env: "beta")
+  end
+
+  desc "Deploy a new release build"
+  lane :deploy_release do |options|
+    deploy(env: "release")
+  end
+
+end
+
+######################### Common LANES ##########################
+
+private_lane :deploy do |options|
+  import("#{ENV["TARGET"]}/keys_#{options[:env]}")
+
+  post_slack("[MyApp #{ENV["TARGET"]}] Starting deploy #{options[:env]}...")
+  archive_app()
+  post_slack("[MyApp #{ENV["TARGET"]} - #{complete_version_number}] Finished  #{options[:env]} 🎉")    
+end
+
+private_lane :archive_app do |options|
+  # Preparing new build
+  prepare_build()
+
+  # Disable Xcode automatic code signing
+  disable_automatic_code_signing(path: ENV["XCODEPROJ"])
+
+  # Check if certificates / provisionings are up to date
+  post_slack("[MyApp #{ENV["TARGET"]} - #{complete_version_number}] Updating app certificates")
+  run_match(ENV["BUNDLE_ID"])
+
+  # Build iOS app
+  post_slack("[MyApp #{ENV["TARGET"]} - #{complete_version_number}] Building...")
+  gym(workspace: ENV["XCWORKSPACE"],
+      scheme: ENV["SCHEME"],
+      configuration: ENV["CONFIGURATION"],
+      export_method: "app-store",
+      skip_profile_detection: true,
+      output_directory: "./fastlane_output/",
+      output_name: "MyApp_#{version_number}",
+      clean: true)
+
+  # Re-enable Xcode automatic code signing
+  enable_automatic_code_signing(path: ENV["XCODEPROJ"])
+
+  # Upload to testFligtht
+  post_slack("[MyApp #{ENV["TARGET"]} - #{complete_version_number}] Uploading to AppStore Connect")
+  pilot(username: ENV["USERNAME"],
+        apple_id: ENV["APPLE_ID"],
+        app_identifier: ENV["BUNDLE_ID"],
+        skip_submission: true,
+        distribute_external: false,
+        skip_waiting_for_build_processing: true)
+      
+  # Cleaning project
+  build_finished()
+end
+
+######################### POST ##########################
+
+### PUBLIC LANES ###
+
+after_all do |lane|
+  notification(subtitle:"fastlane finished '#{lane}'", message: "Ready for the next step!")
+end
+
+error do |lane|
+  notification(subtitle:"fastlane failed '#{lane}''", message: ":(")
+end
+
+### PRIVATE LANES ###
+
+private_lane :prepare_build do |options|
+  post_slack("[MyApp #{ENV["TARGET"]}] Preparing new build for AppStore Connect")
+
+  # Installing dependencies
+  sh("cd .. && make first_install")
+
+  # Ensure that we are on right master and everything is commit
+  ensure_xcode_version(version: ENV["XCODE_VERSION"])
+  ensure_git_status_clean
+end
+
+private_lane :build_finished do |options|
+  rocket
+end
+
+######################### PRIVATE HELPERS ##########################
+
+def version_number
+  "#{ENV["VERSION"]}"
+end
+
+def complete_version_number
+	complete_version_number = "#{version_number}"
+end
+
+def post_slack(message)
+  slack(message: message,
+        channel: "#apple-automation",
+        default_payloads: [])
+end
+
+def run_match(bundle_id)
+	match(username: ENV["USERNAME"],
+        team_id: ENV["TEAM_ID"],
+        type: "appstore",
+        git_branch: ENV["CERTIFICATES_BRANCH"],
+        clone_branch_directly: true,
+        app_identifier: bundle_id)
+end

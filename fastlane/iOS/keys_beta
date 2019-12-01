@@ -1,0 +1,7 @@
+ENV["CONFIGURATION"] = "Beta"
+ENV["APPLE_ID"] = "1474524372"
+
+ENV["BUNDLE_ID"] = "com.myApp.beta.ios"
+ENV["BUNDLE_ID_WHATCHAPP"] = "com.myApp.beta.ios.watchkitapp"
+ENV["BUNDLE_ID_WHATCHEXT"] = "com.myApp.beta.ios.watchkitapp.watchkkitextension"
+ENV["BUNDLE_ID_NOTIFSERV"] = "com.myApp.beta.ios.notificationservice"

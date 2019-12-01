@@ -1,0 +1,69 @@
+
+############
+# Targets
+############
+
+targets:
+
+  # -----------
+  # MyApp_tvOS
+  # -----------
+
+  MyApp_tvOS:
+    type: application
+    platform: tvOS
+
+    # sources
+    sources: 
+      - Sources/Common
+      - Sources/MyApp tvOS
+
+    # Config Files
+    configFiles:
+      Debug: config/tvOS/xcconfig/Debug.xcconfig
+      Release: config/tvOS/xcconfig/Release.xcconfig
+      Adhoc: config/tvOS/xcconfig/Adhoc.xcconfig
+      Beta: config/tvOS/xcconfig/Beta.xcconfig
+
+    # settings
+    settings:
+      ASSETCATALOG_COMPILER_APPICON_NAME: $(AS_APP_ICON)
+
+    # dependencies
+    dependencies:
+      - package: SwiftyUtils
+      - package: SwiftyBeaver
+
+    # scheme
+    scheme:
+      gatherCoverageData: true
+      testTargets:
+        - name: MyApp_Tests_tvOS
+          parallelizable: true
+          randomExecutionOrder: true
+
+    # scripts
+    postCompileScripts:
+      # swiftlint
+      - script: mint run swiftlint swiftlint --config .swiftlint.yml
+        name: ⚠️ Swiftlint
+
+  # -----------
+  # MyApp_Tests_tvOS
+  # -----------
+
+  MyApp_Tests_tvOS:
+    platform: tvOS
+    type: bundle.unit-test
+    sources:
+      - Tests/MyAppTests tvOS
+
+    # dependencies
+    dependencies:
+      - target: MyApp_tvOS
+
+    # scripts
+    postCompileScripts:
+      # swiftlint
+      - script: mint run swiftlint swiftlint --config .swiftlint.yml
+        name: Swiftlint

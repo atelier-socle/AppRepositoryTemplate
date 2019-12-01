@@ -1,0 +1,4 @@
+ENV["SLACK_URL"] = "https://hooks.slack.com/services/..."
+ENV["XCODE_VERSION"] = "11.2.1"
+
+ENV["USERNAME"] = "xxxx@gmail.com"

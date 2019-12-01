@@ -1,0 +1,41 @@
+//
+//  Common.xcconfig
+//  MyApp
+//
+//  Created by Tom Baranes on 20/11/2019.
+//  Copyright © 2019 Atelier Socle. All rights reserved.
+//
+
+// Info plist custom keys
+//
+// Bump versions here reflected to all targets and extensions by one way.
+//
+
+// IMPORTANT NOTES :
+//
+// -    If app version and/or build version doesn't change after an update here,
+//      clean the build folder (Alt key+ Product Clean Tab) and Clean Product
+//
+// -    To deploy as `Beta` or `Release` **if some failure**, change build and archive scheme to matching environment
+//      Very important, **IF FAILURE** we need to update CloudKit Container by select only one devoted matching
+//      iCloud bundle container to `Capabilities` tab, actually a `$(AS_CLOUD_CONTAINER_BUNDLE_ID)` Key is setted to manage
+//      automatically entitlements for iCloud Container, (in this case check entitlement value for matching container identifier).
+//
+// -    Be sure App IDs, App Groups IDs, iCloud Containers (bundle identifiers and container deployed to production)
+//      and Provisioning Profiles are ready to use before
+//      any release/beta deployment.
+//
+// -    Verify before archiving that `Always Embed Swift..` as `ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES` Key
+//      is setted to `NO` for Apex extensions (Pushs extensions, widget extension) only.
+//
+// -    To be sure deployment to release/beta works well, check if `Product Bundle identifier` as `PRODUCT_BUNDLE_IDENTIFIER` Key
+//      is setted to `$(AS_APP_BUNDLE_ID)`, this will fix bug with provisioning profiles for push extensions apex.
+//
+// -    If some problems persists, refresh provisioning profiles, team profile, re-start XCode or re-start computer. We can also
+//      check provisioning matching by compare in upload app to store from automatic certificates xcode management to manually
+//      certificates management.
+
+/// App version number
+AS_APP_VERSION = 2.0.0
+/// App build number
+AS_APP_BUILD_VERSION = 1

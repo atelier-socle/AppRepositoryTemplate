@@ -1,0 +1,2 @@
+git_url("git@github.com:atelier-socle/apple-certificates.git")
+storage_mode("git")

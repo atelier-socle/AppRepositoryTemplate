@@ -1,0 +1,28 @@
+##########
+# MyApp
+##########
+
+ib:
+  - inputs: Sources/MyApp iOS/
+    module: MyApp
+    outputs:
+      - templateName: scenes-swift4
+        output: Sources/MyApp iOS/Supporting Files/SwiftGen/StoryboardScenes.swift
+        params:
+          module: MyApp
+      - templateName: segues-swift4
+        params:
+          module: MyApp
+        output: Sources/MyApp iOS/Supporting Files/SwiftGen/StoryboardSegues.swift
+
+xcassets:
+  inputs: [Sources/MyApp iOS/Supporting Files/Assets iOS.xcassets]
+  outputs:
+    - templateName: swift4
+      output: Sources/MyApp iOS/Supporting Files/SwiftGen/Assets.swift
+
+strings:
+  - inputs: Sources/MyApp iOS/Supporting Files/Localizables/en.lproj
+    outputs:
+        templateName: structured-swift4
+        output: Sources/MyApp iOS/Supporting Files/SwiftGen/Localizables.swift

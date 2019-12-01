@@ -1,0 +1,7 @@
+ENV["CONFIGURATION"] = "Adhoc"
+ENV["APPLE_ID"] = "1474524252"
+
+ENV["BUNDLE_ID"] = "com.myApp.adhoc.ios"
+ENV["BUNDLE_ID_WHATCHAPP"] = "com.myApp.adhoc.ios.watchkitapp"
+ENV["BUNDLE_ID_WHATCHEXT"] = "com.myApp.adhoc.ios.watchkitapp.watchkkitextension"
+ENV["BUNDLE_ID_NOTIFSERV"] = "com.myApp.adhoc.ios.notificationservice"

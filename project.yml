@@ -1,0 +1,71 @@
+name: MyApp
+
+############
+# Options
+############
+
+options:
+  minimumXcodeGenVersion: 2.10
+  groupSortPosition: top
+  generateEmptyDirectories: true
+  deploymentTarget: 
+    iOS: "13.0"
+    watchOS: "6.0"
+    tvOS: "13.0"
+    macOS: "10.15"
+
+############
+# fileGroups
+############
+
+fileGroups:
+  - config
+
+############
+# Configs
+############
+
+configs:
+  Debug: debug
+  Release: release
+  Adhoc: release
+  Beta: release
+
+############
+# Packages
+############
+
+packages:
+  SwiftyUtils:
+    url: https://github.com/tbaranes/SwiftyUtils
+    from: 5.0.0
+
+  SwiftyBeaver:
+    url: https://github.com/SwiftyBeaver/SwiftyBeaver
+    from: 1.0.0
+
+   # Reusable, waiting for 4.1.0
+   # Reusable:
+   #   url: https://github.com/AliSoftware/Reusable
+   #   from: 4.0.0
+
+############
+# Settings
+############
+
+settings:
+  PRODUCT_BUNDLE_IDENTIFIER: $(AS_BUNDLE_IDENTIFIER)
+
+############
+# Include
+############
+
+include:
+  - path: xcodegen/project_ios.yml
+    relativePaths: false
+  - path: xcodegen/project_tvos.yml
+    relativePaths: false
+  - path: xcodegen/project_watchos.yml
+    relativePaths: false
+  - path: xcodegen/project_macos.yml
+    relativePaths: false

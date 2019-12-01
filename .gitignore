@@ -1,0 +1,43 @@
+# Xcode
+.DS_Store
+*/build/*
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+profile
+*.moved-aside
+DerivedData
+.idea/
+*.hmap
+*.xccheckout
+*.mobileprovision
+*.orig
+Preview.html
+*.xcodeproj
+
+# CocoaPods
+Pods
+
+# Carthage
+Carthage
+
+# SPM
+.build
+Packages
+Package.pins
+
+# fastlane specific
+fastlane/report.xml
+
+# deliver temporary files
+fastlane/Preview.html
+fastlane_output/
+
+# snapshot generated screenshots
+fastlane/screenshots

@@ -1,0 +1,144 @@
+
+############
+# Targets
+############
+
+targets:
+
+  # -----------
+  # MyApp_iOS
+  # -----------
+
+  MyApp_iOS:
+    type: application
+    platform: iOS
+
+    # sources
+    sources: 
+      - Sources/Common
+      - Sources/MyApp iOS
+
+    # Config Files
+    configFiles:
+      Debug: config/iOS/xcconfig/Debug.xcconfig
+      Release: config/iOS/xcconfig/Release.xcconfig
+      Adhoc: config/iOS/xcconfig/Adhoc.xcconfig
+      Beta: config/iOS/xcconfig/Beta.xcconfig
+
+    # dependencies
+    dependencies:
+      - target: "MyApp_watchOS_App"
+      - target: "MyApp_Notification_Service"
+      - target: "MyApp_Notification_Content"
+      - carthage: SwiftMessages
+      - package: SwiftyUtils
+      - package: SwiftyBeaver
+      - sdk: CloudKit.framework
+      - sdk: Protobuf.framework
+      - sdk: GoogleToolboxForMac.framework
+      - sdk: GTMSessionFetcher.framework
+      - sdk: FirebaseABTesting.framework
+      - sdk: FirebaseRemoteConfig.framework
+      - sdk: FirebasePerformance.framework
+      - sdk: Firebase.framework
+      - sdk: FirebaseAnalytics.framework
+      - sdk: FirebaseCore.framework
+      - sdk: FirebaseInstanceID.framework
+      - sdk: GoogleAppMeasurement.framework
+      - sdk: GoogleUtilities.framework
+      - sdk: nanopb.framework
+      # waiting for 4.1.0
+      # - package: Reusable
+
+    # settings
+    settings:
+      ASSETCATALOG_COMPILER_APPICON_NAME: $(AS_APP_ICON)
+
+    # scheme
+    scheme:
+      gatherCoverageData: true
+      testTargets:
+        - name: MyApp_Tests_iOS
+          parallelizable: true
+          randomExecutionOrder: true
+
+
+    # scripts
+    postCompileScripts:
+      # plist copy
+      - script: |
+                DESTINATION=${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app
+                # Copying app's plists in .app
+                sh scripts/xcode/copy_plists.sh ${AS_APP_ENVIRONMENT} "$DESTINATION" "iOS"
+        name: 🔥Copying plists
+
+      # swiftlint
+      - script: mint run swiftlint swiftlint --config .swiftlint.yml
+        name: ⚠️ Swiftlint
+
+  # -----------
+  # MyApp_Tests_iOS
+  # -----------
+
+  MyApp_Tests_iOS:
+    platform: iOS
+    type: bundle.unit-test
+    sources:
+      - Tests/MyAppTests iOS
+
+    # dependencies
+    dependencies:
+      - target: MyApp_iOS
+
+    # scripts
+    postCompileScripts:
+      # swiftlint
+      - script: mint run swiftlint swiftlint --config .swiftlint.yml
+        name: ⚠️ Swiftlint
+
+  # -----------
+  # MyApp_Notification_Service
+  # -----------
+
+  MyApp_Notification_Service:
+    platform: iOS
+    type: app-extension
+    sources:
+      - Sources/MyApp iOS Notification Service
+
+    # Config Files
+    configFiles:
+      Debug: config/iOS/xcconfig/Debug.xcconfig
+      Release: config/iOS/xcconfig/Release.xcconfig
+      Adhoc: config/iOS/xcconfig/Adhoc.xcconfig
+      Beta: config/iOS/xcconfig/Beta.xcconfig
+
+    # settings
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: $(AS_BUNDLE_ID_NOTIFSERV)
+
+  # -----------
+  # MyApp_Notification_Service
+  # -----------
+
+  MyApp_Notification_Content:
+    platform: iOS
+    type: app-extension
+    sources:
+      - Sources/MyApp iOS Notification Content
+
+    # Config Files
+    configFiles:
+      Debug: config/iOS/xcconfig/Debug.xcconfig
+      Release: config/iOS/xcconfig/Release.xcconfig
+      Adhoc: config/iOS/xcconfig/Adhoc.xcconfig
+      Beta: config/iOS/xcconfig/Beta.xcconfig
+
+    # settings
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: $(AS_BUNDLE_ID_NOTIFCONTENT)
+
+    # dependencies
+    dependencies:
+      - sdk: UserNotifications.framework
+      - sdk: UserNotificationsUI.framework

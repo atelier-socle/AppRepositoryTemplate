@@ -1,0 +1,66 @@
+# ############
+# # Targets
+# ############
+
+targets:
+
+  # -----------
+  # MyApp_watchOS_App
+  # -----------
+
+  MyApp_watchOS_App:
+    type: application.watchapp2
+    platform: watchOS
+
+    # dependencies
+    dependencies:
+      - target: "MyApp_watchOS_Extension"
+
+    # sources  
+    sources: 
+      - "Sources/MyApp WatchKit App"
+
+    # settings
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: $(AS_WKAPP_BUNDLE_IDENTIFIER)
+      ASSETCATALOG_COMPILER_APPICON_NAME: $(AS_APP_ICON)
+
+    # Config Files
+    configFiles:
+      Debug: config/iOS/xcconfig/Debug.xcconfig
+      Release: config/iOS/xcconfig/Release.xcconfig
+      Adhoc: config/iOS/xcconfig/Adhoc.xcconfig
+      Beta: config/iOS/xcconfig/Beta.xcconfig
+
+    # scheme
+    scheme:
+      configVariants:
+        MyApp_watchOS_App
+
+  # -----------
+  # MyApp_watchOS_Extension
+  # -----------
+
+  MyApp_watchOS_Extension:
+    type: watchkit2-extension
+    platform: watchOS
+    sources: 
+      - "Sources/MyApp WatchKit Extension"
+
+    # scripts
+    postCompileScripts:
+      # swiftlint
+      - script: mint run swiftlint swiftlint --config .swiftlint.yml
+        name: ⚠️ Swiftlint
+
+    # settings
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: $(AS_WKEXT_BUNDLE_IDENTIFIER)
+
+    # Config Files
+    configFiles:
+      Debug: config/iOS/xcconfig/Debug.xcconfig
+      Release: config/iOS/xcconfig/Release.xcconfig
+      Adhoc: config/iOS/xcconfig/Adhoc.xcconfig
+      Beta: config/iOS/xcconfig/Beta.xcconfig
+

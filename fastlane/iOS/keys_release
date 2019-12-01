@@ -1,0 +1,7 @@
+ENV["CONFIGURATION"] = "Release"
+ENV["APPLE_ID"] = "1474524223"
+
+ENV["BUNDLE_ID"] = "com.myApp.release.ios"
+ENV["BUNDLE_ID_WHATCHAPP"] = "com.myApp.release.ios.watchkitapp"
+ENV["BUNDLE_ID_WHATCHEXT"] = "com.myApp.release.ios.watchkitapp.watchkkitextension"
+ENV["BUNDLE_ID_NOTIFSERV"] = "com.myApp.release.ios.notificationservice"

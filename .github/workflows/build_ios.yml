@@ -1,0 +1,36 @@
+name: "MyApp iOS CI"
+
+on: 
+  push:
+    branches: 
+      - master
+  pull_request:
+    branches: 
+      - master
+
+jobs:
+  test:
+    runs-on: macOS-latest
+    strategy:
+      matrix:
+        destination: ["OS=13.1,name=iPhone 11 Pro"] #, "OS=12.4,name=iPhone XS", "OS=11.4,name=iPhone X", "OS=10.3.1,name=iPhone SE"]
+    env:
+      MINT_PATH: Mint
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/cache@v1
+        with:
+          path: Carthage
+          key: ${{ runner.os }}-carthage-${{ hashFiles('**/Cartfile.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-carthage-
+      - uses: actions/cache@v1
+        with:
+          path: Mint
+          key: ${{ runner.os }}-mint-${{ hashFiles('**/Mint/metadata.json') }}
+          restore-keys: |
+            ${{ runner.os }}-mint-
+      - name: Bootstrap
+        run: make first_install
+      - name: iOS - ${{ matrix.destination }}
+        run: set -o pipefail && env NSUnbufferedIO=YES xcodebuild -project "MyApp.xcodeproj" -scheme "MyApp_iOS" -destination "${{ matrix.destination }}" clean test | xcpretty

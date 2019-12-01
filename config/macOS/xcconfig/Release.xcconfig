@@ -1,0 +1,19 @@
+//
+//  Release.xcconfig
+//  MyApp
+//
+//  Created by Tom Baranes on 20/11/2019.
+//  Copyright © 2019 Atelier Socle. All rights reserved.
+//
+
+//// Common Configuration
+#include "config/macOS/xcconfig/Common.xcconfig"
+
+/// App target bundle identifier
+AS_BUNDLE_IDENTIFIER = com.myApp.release.macOS
+/// App Name
+AS_APP_NAME = MyApp
+/// ProjectEnvironment
+AS_APP_ENVIRONMENT = Release
+/// App Icon
+AS_APP_ICON = AppIcon Release

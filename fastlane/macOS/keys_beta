@@ -1,0 +1,4 @@
+ENV["CONFIGURATION"] = "Beta"
+ENV["APPLE_ID"] = "1474524372"
+
+ENV["BUNDLE_ID"] = "com.myApp.beta.macos"
