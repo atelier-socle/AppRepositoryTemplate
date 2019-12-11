@@ -16,7 +16,8 @@ ib:
         output: Sources/MyApp iOS/Supporting Files/SwiftGen/StoryboardSegues.swift
 
 xcassets:
-  inputs: [Sources/MyApp iOS/Supporting Files/Assets iOS.xcassets]
+  inputs: [Sources/MyApp iOS/Supporting Files/Assets iOS.xcassets,
+           Sources/MyApp iOS/Supporting Files/Colors iOS.xcassets]
   outputs:
     - templateName: swift4
       output: Sources/MyApp iOS/Supporting Files/SwiftGen/Assets.swift

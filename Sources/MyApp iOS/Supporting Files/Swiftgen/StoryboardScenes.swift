@@ -11,33 +11,33 @@ import UIKit
 // MARK: - Storyboard Scenes
 
 // swiftlint:disable explicit_type_interface identifier_name line_length type_body_length type_name
-public enum StoryboardScene {
-  public enum LaunchScreen: StoryboardType {
-    public static let storyboardName = "LaunchScreen"
+internal enum StoryboardScene {
+  internal enum LaunchScreen: StoryboardType {
+    internal static let storyboardName = "LaunchScreen"
 
-    public static let initialScene = InitialSceneType<UIKit.UIViewController>(storyboard: LaunchScreen.self)
+    internal static let initialScene = InitialSceneType<UIKit.UIViewController>(storyboard: LaunchScreen.self)
   }
 }
 // swiftlint:enable explicit_type_interface identifier_name line_length type_body_length type_name
 
 // MARK: - Implementation Details
 
-public protocol StoryboardType {
+internal protocol StoryboardType {
   static var storyboardName: String { get }
 }
 
-public extension StoryboardType {
+internal extension StoryboardType {
   static var storyboard: UIStoryboard {
     let name = self.storyboardName
     return UIStoryboard(name: name, bundle: Bundle(for: BundleToken.self))
   }
 }
 
-public struct SceneType<T: UIViewController> {
-  public let storyboard: StoryboardType.Type
-  public let identifier: String
+internal struct SceneType<T: UIViewController> {
+  internal let storyboard: StoryboardType.Type
+  internal let identifier: String
 
-  public func instantiate() -> T {
+  internal func instantiate() -> T {
     let identifier = self.identifier
     guard let controller = storyboard.storyboard.instantiateViewController(withIdentifier: identifier) as? T else {
       fatalError("ViewController '\(identifier)' is not of the expected class \(T.self).")
@@ -46,10 +46,10 @@ public struct SceneType<T: UIViewController> {
   }
 }
 
-public struct InitialSceneType<T: UIViewController> {
-  public let storyboard: StoryboardType.Type
+internal struct InitialSceneType<T: UIViewController> {
+  internal let storyboard: StoryboardType.Type
 
-  public func instantiate() -> T {
+  internal func instantiate() -> T {
     guard let controller = storyboard.storyboard.instantiateInitialViewController() as? T else {
       fatalError("ViewController is not of the expected class \(T.self).")
     }
