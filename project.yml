@@ -44,11 +44,6 @@ packages:
     url: https://github.com/SwiftyBeaver/SwiftyBeaver
     from: 1.0.0
 
-   # Reusable, waiting for 4.1.0
-   # Reusable:
-   #   url: https://github.com/AliSoftware/Reusable
-   #   from: 4.0.0
-
 ############
 # Settings
 ############
