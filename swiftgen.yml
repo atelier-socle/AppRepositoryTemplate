@@ -8,11 +8,7 @@ ib:
     outputs:
       - templateName: scenes-swift4
         output: Sources/MyApp iOS/Supporting Files/SwiftGen/StoryboardScenes.swift
-        params:
-          module: MyApp
       - templateName: segues-swift4
-        params:
-          module: MyApp
         output: Sources/MyApp iOS/Supporting Files/SwiftGen/StoryboardSegues.swift
 
 xcassets:
