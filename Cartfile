@@ -1,2 +1,3 @@
 binary "https://dl.google.com/dl/firebase/ios/carthage/FirebaseAnalyticsBinary.json"
 binary "https://dl.google.com/dl/firebase/ios/carthage/FirebasePerformanceBinary.json"
+github "AliSoftware/Reusable"
